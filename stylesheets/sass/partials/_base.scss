@@ -1,0 +1,41 @@
+@import "compass";
+
+// Config
+$rhythm-unit: "rem";
+$base-font-size: 16px;
+$base-line-height: 24px;
+$layout-header-height: 60px;
+
+// Theme
+$theme-color: #4DD0E1;
+$card-color: #EEE;
+$font-color: #333;
+
+@include global-reset;
+
+// Functions
+@function get-rem($size) {
+  $rem: $size / $base-font-size;
+  @return #{$rem}rem;
+}
+
+// Mixins
+
+// Generate a rem-based font-size with its pixel fallback, e.g.:
+//
+// .foo {
+//     @include font-size(12px);
+// }
+
+@mixin font-size($size) {
+  font-size: $size; // Fallback in px
+  font-size: get-rem($size);
+}
+
+@mixin button($color) {
+  width: 80px;
+  height: 35px;
+  border: none;
+  background: $color;
+  border-radius: 2px;
+}

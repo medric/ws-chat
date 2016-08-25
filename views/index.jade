@@ -1,0 +1,11 @@
+html
+  head
+    title!= title
+  body
+    !=content
+    script(src='bundle.js')
+    script(type='text/javascript').
+      window.__initialState__ = {
+        roomList: [],
+        currentRoom: null,
+      };
