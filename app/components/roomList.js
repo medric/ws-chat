@@ -28,7 +28,7 @@ class RoomList extends Component {
               <ul>
               {
                   this.props.rooms.map(room => {
-                    return <li> { room.name } </li>
+                    return <li key={ room.name }> { room.name } </li>
                   }, this)
               }
               </ul>

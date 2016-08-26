@@ -3,9 +3,6 @@ html
     title!= title
   body
     !=content
+    script.
+      window.__initialState__=!{JSON.stringify(state)};
     script(src='bundle.js')
-    script(type='text/javascript').
-      window.__initialState__ = {
-        roomList: [],
-        currentRoom: null,
-      };

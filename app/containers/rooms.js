@@ -6,7 +6,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     addRoom : (event, name) => {
   		event.preventDefault();
-      
       dispatch(addRoom(name));
   	}
   }

@@ -21,9 +21,9 @@ export const chat = {
 
       this._clients.push(newClient);
 
-      ws.on('message', (message) => {
+      ws.on('message', (msg) => {
         try {
-          var data = JSON.parse(message);
+          var data = JSON.parse(msg);
 
           this._handleData(data);
         } catch (e) {
@@ -44,24 +44,42 @@ export const chat = {
     // todo: data validation
     if(data.hasOwnProperty('type')) {
       switch (data.type) {
-        case 'addRoom':
-          var id = guid();
-          var room = {
-            id: id,
-            name: data.name
-          };
+        case 'FETCH_ROOMS':
+        redisClient.hmgetall(key, (error, reply) => {
+          var res = Object.assign({}, data, {id: id});
+          this._wss.broadcast(JSON.stringify(res));
+        });
 
-          // save to redis
-          redisClient.lpush('rooms', JSON.stringify(room), (err, reply) => {
-            // broadcast new room
-            if(!err) {
-              var res = Object.assign({}, room, {type: data.type});
-              this._wss.broadcast(JSON.stringify(data));
-            }
+        break;
+        case 'ADD_ROOM':
+        // save to redis
+        var key = `rooms:${data.name}`;
+        redisClient.hmset(key, 'name', data.name, (error, reply) => {
+          var res = Object.assign({}, data);
+          this._wss.broadcast(JSON.stringify(res));
+        });
+
+        break;
+        case 'NEW_MESSAGE':
+        var id = guid();
+
+        const indexKey = `messages:${data.roomId}`;
+
+        // atomic operation
+        redisClient.multi()
+        .incr('message:count')
+        .exec(function (err, replies) {
+          var key = `message:${replies[0]}`;
+          redisClient.multi()
+          .hmset(key, 'roomId', data.roomId, 'roomId', data.roomId,
+          'text', data.text, 'data', data.date)
+          .sadd(indexKey, id)
+          .exec(function (err, replies) {
+
           });
-          break;
-        default:
+        });
 
+        default:
       }
     }
   }

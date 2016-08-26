@@ -41,7 +41,7 @@ const server = app.listen(port, () => {
       path: '/ws'
     }
   );
-  
+
   chat.initSocket(wss);
 });
 
@@ -50,6 +50,10 @@ var AppFactory = React.createFactory(App);
 app.get('/', function(req, res, next) {
   res.render('index', {
     title: 'ChatX',
-    content: ReactDOMServer.renderToString(AppFactory())
+    content: ReactDOMServer.renderToString(AppFactory()),
+    state: {
+      rooms: [],
+      messages: [], 
+    }
   });
 });

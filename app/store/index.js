@@ -4,7 +4,7 @@
 import { applyMiddleware, compose, createStore, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
-import reducers from '../reducers';
+import reducer from '../reducers';
 
 export default function configureStore(initialState = {}) {
   const logger = createLogger({
@@ -22,7 +22,7 @@ export default function configureStore(initialState = {}) {
     window.devToolsExtension ? window.devToolsExtension() : f => f
   );
 
-  const store = createStore(reducers, enhancer);
+  const store = createStore(reducer, initialState, enhancer); 
 
   if(module.hot) {
     // Enable Webpack hot module replacement for reducers
@@ -31,6 +31,6 @@ export default function configureStore(initialState = {}) {
       store.replaceReducer(nextRootReducer);
     });
   }
-  
+
   return store;
 }

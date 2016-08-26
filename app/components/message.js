@@ -5,15 +5,14 @@ class Message extends Component {
     date: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     author: PropTypes.object.isRequired
-  },
+  }
 
   constructor(props) {
 		super(props);
 	}
 
 	render() {
-		return (
-		);
+		
 	}
 }
 

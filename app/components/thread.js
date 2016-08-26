@@ -2,13 +2,12 @@ import React, { PropTypes, Component } from 'react';
 import Message from './message';
 
 class Thread extends Component {
-	state = {
-		messages: '',
-		messages: []
-	};
-
 	constructor(props) {
 	   super(props);
+	}
+
+	state = {
+		currentMessage: ''
 	}
 
 	componentWillMount() {
@@ -30,17 +29,33 @@ class Thread extends Component {
                     />
                   }, this)
               }
+
+							<div>
+									<input type="text" value={ this.state.currentMessage }
+										onChange={(event) => {
+											this.setState({currentMessage: event.target.value});
+										}}
+									/>
+									<button
+									onClick={() => {
+										this.props.sendMessage(event, this.state.currentMessage, this.props.currentRoom);
+									}}>
+										Send
+									</button>
+							</div>
           </div>
       );
   }
 
 }
 
-PostsList.propTypes = {
-	messages: PropTypes.array
+Thread.propTypes = {
+	messages: PropTypes.array,
+	sendMessage: PropTypes.func,
+	currentRoom: PropTypes.string
 };
 
-PostsList.defaultProps = {
+Thread.defaultProps = {
   messages: [],
   maxMessagesLimit: 10
 };
