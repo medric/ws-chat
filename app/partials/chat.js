@@ -15,6 +15,7 @@ class Chat extends Component {
       <div>
         <Rooms />
         <ThreadMessages />
+        <SigninForm />
       </div>
      )
   }
