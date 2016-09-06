@@ -4,4 +4,7 @@ export const actions = {
   addRoom: {
     parameters: ['name']
   },
+  login: {
+    parameters: ['name']
+  }
 };

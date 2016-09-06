@@ -1,21 +1,23 @@
-import { ADD_ROOM, LOAD_ROOM, FETCH_ROOMS, SEND_MESSAGE } from '../actions/common';
+import { ADD_ROOM, LOAD_ROOM, FETCH_ROOMS, SEND_MESSAGE, SIGN_IN} from '../actions/common';
 
 const reducer = (state, action) => {
-  console.log(action, state);
   switch (action.type) {
-    //return { ...state, rooms: [...state.rooms, [action]] };
     case FETCH_ROOMS:
       break;
     case LOAD_ROOM:
       delete action.type;
 
-      let rooms = { rooms : [...state.rooms, action], currentRoom : action.name };
-      let newState = {...state, ...rooms };
+      var rooms = { rooms : [...state.rooms, action], currentRoom : action.name };
+      var newState = {...state, ...rooms };
 
       return newState;
-      break;
     case SEND_MESSAGE:
-      break;
+    case SIGN_IN:
+      var newState = Object.assign({}, state, {
+        signedIn: true
+      });
+
+      return newState;
     default:
       return state;
   }

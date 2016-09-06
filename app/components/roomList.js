@@ -24,16 +24,16 @@ class RoomList extends Component {
 
   render() {
       return (
-          <div className="page__container-content row">
-              <ul>
+          <div className="page__container-content col">
+              <ul id="room-list">
               {
                   this.props.rooms.map(room => {
                     return <li key={ room.name }> { room.name } </li>
                   }, this)
               }
               </ul>
-              <div>
-                  <input type="text" value={ this.state.room }
+              <div className="page__container-content__form">
+                  <input type="text" value={ this.state.room } className="input-x"
 										onChange={(event) => {
 											this.setState({room: event.target.value});
 										}}
