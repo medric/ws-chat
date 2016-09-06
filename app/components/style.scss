@@ -1,0 +1,132 @@
+@import "compass";
+
+// Config
+$rhythm-unit: "rem";
+$base-font-size: 16px;
+$base-line-height: 24px;
+$layout-header-height: 60px;
+
+// Theme
+$theme-color: #4DD0E1;
+$card-color: #EEE;
+$font-color: #333;
+
+@include global-reset;
+
+// Functions
+@function get-rem($size) {
+  $rem: $size / $base-font-size;
+  @return #{$rem}rem;
+}
+
+// Mixins
+@mixin font-size($size) {
+  font-size: $size; // Fallback in px
+  font-size: get-rem($size);
+}
+
+@mixin button($width) {
+  width: $width;
+  height: 35px;
+  border: none;
+  background: #4DD0E1;
+  border-bottom: solid 2px #3cb8c7;
+  margin: 5px;
+  color: #FFF;
+  border-radius: 2px;
+}
+
+.page__container {
+  @include establish-baseline($base-font-size);
+  font-family: sans-serif;
+
+  .page__container-view {
+    background: #f1f1f1;
+    height: 100%;
+  }
+
+  h1, h2, h3 {
+    text-transform: capitalize;
+  }
+
+  h1 {
+    @include font-size(20px);
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    @include font-size(18px);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  input, textarea {
+    border: none;
+    border-bottom: solid 1px #cecece;
+  }
+
+  button {
+    @include button(200px);
+
+    a {
+      text-decoration: none;
+      color: #FFF;
+      font-weight: 600;
+    }
+  }
+
+  section {
+    position: relative;
+  }
+
+  .row {
+    @include display-flex;
+    @include flex-direction(row);
+    @include flex-wrap(wrap);
+  }
+
+  .col {
+    @include display-flex;
+    @include flex-direction(column);
+    @include flex-wrap(wrap);
+  }
+
+  .input-x {
+    width: 350px;
+    height: 35px;
+  }
+
+  #signin-container {
+    position: fixed;
+    top: 50%;
+    /* margin: auto; */
+    width: 600px;
+    left: 50%;
+    margin-left: -15em;
+    margin-top: -9em;
+  }
+
+  textarea:focus, input:focus{
+    outline: none;
+  }
+
+  ul#room-list {
+    padding: 10px;
+    li {
+      padding: 15px;
+      width: 200px;
+      background: #e8e8e8;
+      border-bottom: solid 1px #d4d4d4;
+    }
+  }
+
+  .page__container-content__form {
+    padding: 10px;
+  }
+}
