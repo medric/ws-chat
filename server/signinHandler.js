@@ -1,13 +1,20 @@
+const shortid = require('shortid');
+
 module.exports = (req, res) => {
   var options = { 'username': req.body.username, 'error': null };
   if (!req.body.username) {
     res.status(400).send('Something broke!');
-  } else if (req.body.username === req.session.username) {
+  } else if (req.session.username) {
     // User has not changed username, accept it as-is
-    res.redirect('/');
+    //res.redirect('/');
   } else {
     // Validate if username is free
-    req.session.username = req.body.username;
-    res.json(options);
+    req.session.user = {
+      id: shortid.generate(),
+      name: req.body.username,
+    };
+
+    //req.session.save();
+    res.send(options);
   }
 }

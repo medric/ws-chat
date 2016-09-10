@@ -1,10 +1,11 @@
 import { chat } from './chat';
 import App from '../app/partials/app';
+import { session, redisClient, RedisStore, sessionStore, parseCookie } from './bootstrap';
+import { config } from '../common/config';
 
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const express = require('express');
-const session = require('express-session');
 const webpack = require('webpack');
 const webpackConfig = require('../webpack/webpack.config');
 const fs = require('fs');
@@ -22,13 +23,16 @@ const compiler = webpack(webpackConfig);
 
 const signin = require('./signinHandler');
 
-// session
-// Use the session middleware
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
-
-app.use(bodyParser.json());       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+app.use(bodyParser.json());      // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({  // to support URL-encoded bodies
   extended: true
+}));
+
+// Use the session middleware
+app.use(parseCookie);
+app.use(session({
+  store: sessionStore,
+  secret: config.secret
 }));
 
 app.set('view engine', 'jade');
@@ -42,8 +46,6 @@ app.use(webpackHotMiddleware(compiler));
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../dist')));
-
-app.post('/signin', signin);
 
 //http://stackoverflow.com/questions/28553904/client-routing-using-react-router-and-server-side-routing
 // app.use(function(req, res, next) {
@@ -82,3 +84,5 @@ app.get('/', function(req, res, next) {
     }
   });
 });
+
+app.post('/signin', signin);

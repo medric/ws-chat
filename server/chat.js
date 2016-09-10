@@ -1,48 +1,69 @@
+import { redisClient, sessionStore, parseCookie } from './bootstrap';
+
+const express = require('express');
 const redis = require('redis');
-const redisClient = redis.createClient();
 const actions = require('../common/config');
 const guid = require('../common/utils').guid;
 
 export const chat = {
-  _clients: [],
-  _rooms: [],
-  _wss: null,
+  clients: {},
   initSocket: function(wss) {
     if(!wss) {
       throw new Error('WebSocketServer is not defined');
     }
 
     this._wss = wss;
+
     wss.on('connection', ws => {
-      //var location = url.parse(ws.upgradeReq.url, true);
-      // you might use location.query.access_token to authenticate or share sessions
-      // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-      //var newClient = {};
-      ws.on('message', (msg) => {
+      console.log('new connection');
+      parseCookie(ws.upgradeReq, null, (error) => {
+        var sessionId = ws.upgradeReq.signedCookies['connect.sid'];
+        sessionStore.get(sessionId, (error, session) => {
+          if(session) {
+            // add new user
+            var user = session.user;
+            this.clients[user.id] = Object.assign({}, {ws: ws, roomId: null});
+            listen(user);
+          }
+        });
+      });
+    });
+
+    function listen(user) {
+      this.clients[user.id].ws.on('message', (msg) => {
         try {
           var data = JSON.parse(msg);
-          this._handleData(data);
+          this._handleData(user, data);
         } catch (e) {
         }
       });
-
-      ws.send('something');
-    });
-
-    this._wss.broadcast = function (data) {
-      wss.clients.forEach(function each(client) {
-        client.send(data);
-      });
-    };
-
+    }
   },
-  _handleData: function(data) {
+  _join: function(userId, roomId) {
+    // user weakmap instead ?
+    this.clients[userId].roomId = roomId;
+  },
+  _broadcast: function(data) {
+    this.clients.forEach(function each(client) {
+      client.ws.send(data);
+    });
+  },
+  _broadcastToRoom: function(message) {
+    this.clients.forEach(client => {
+      if(client.roomId === message.roomId) {
+        client.ws.send(message);
+      }
+    });
+  },
+  _handleData: function(user, data) {
     // todo: data validation
     if(data.hasOwnProperty('type')) {
       switch (data.type) {
-        case 'SIGN_IN':
-
+        case 'JOIN':
+          this._join(user.id, data.roomId);
+          break;
         case 'FETCH_ROOMS':
+          var key = `rooms:${data.name}`;
           redisClient.hmgetall(key, (error, reply) => {
             var res = Object.assign({}, data, {id: id});
             this._wss.broadcast(JSON.stringify(res));
@@ -62,18 +83,19 @@ export const chat = {
           var id = guid();
 
           const indexKey = `messages:${data.roomId}`;
-
           // atomic operation
+          console.log('new');
           redisClient.multi()
           .incr('message:count')
           .exec(function (err, replies) {
             var key = `message:${replies[0]}`;
             redisClient.multi()
-            .hmset(key, 'roomId', data.roomId, 'roomId', data.roomId,
-            'text', data.text, 'data', data.date)
+            .hmset(key, 'roomId', data.roomId, 'author', data.roomId,
+            'text', data.text, 'date', data.date)
             .sadd(indexKey, id)
             .exec(function (err, replies) {
-
+              console.log(replies);
+              this._broadcastToRoom(data);
             });
           });
 

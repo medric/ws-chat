@@ -13,6 +13,7 @@ export const SIGN_IN = 'SIGN_IN';
 export function signin(username) {
   return dispatch => {
     fetch('/signin', {
+      credentials: 'same-origin',
       method: 'POST',
       headers: {
         'Accept': 'application/json',
