@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import Message from './message';
+import Message from './Message';
 
 class Thread extends Component {
 	constructor(props) {

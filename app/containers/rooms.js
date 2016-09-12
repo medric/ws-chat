@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import RoomList from '../components/roomList';
+import RoomList from '../components/RoomList';
 import { addRoom } from '../actions/common';
 
 const mapDispatchToProps = (dispatch) => {

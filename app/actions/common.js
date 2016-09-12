@@ -1,6 +1,6 @@
 /*
- * action types
- */
+* action types
+*/
 export const ADD_ROOM = 'ADD_ROOM';
 export const LOAD_ROOM = 'LOAD_ROOM';
 export const FETCH_ROOMS = 'FETCH_ROOMS';
@@ -8,8 +8,8 @@ export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const SIGN_IN = 'SIGN_IN';
 
 /*
- * action creators
- */
+* action creators
+*/
 export function signin(username) {
   return dispatch => {
     fetch('/signin', {
@@ -44,7 +44,7 @@ export function addRoom(name) {
       name: name
     };
 
-    window.socket.send(JSON.stringify(msg));
+    send(JSON.stringify(msg));
   }
 }
 
@@ -58,7 +58,7 @@ export function sendMessage(user, text, roomId) {
       date: new Date(),
     };
 
-    window.socket.send(JSON.stringify(msg));
+    send(JSON.stringify(msg));
   }
 }
 
@@ -69,5 +69,13 @@ export function loadRoom(room) {
 
 function fetchRooms() {
   return {
+  }
+}
+
+function send(data) {
+  try {
+    window.socket.send(data);
+  } catch (error) {
+    console.log(Object.prototype.toString.call(error));
   }
 }

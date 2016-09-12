@@ -1,12 +1,11 @@
 import { connect } from 'react-redux';
-import Thread from '../components/thread';
+import Thread from '../components/Thread';
 import { sendMessage } from '../actions/common';
 
 const getLastMessages = (messages, filter) => {
 };
 
 const mapDispatchToProps = (dispatch, ...args) => {
-
   return {
     sendMessage: (event, text, roomId) => {
   		event.preventDefault();
@@ -15,7 +14,7 @@ const mapDispatchToProps = (dispatch, ...args) => {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     messages: state.messages,
     currentRoom: state.currentRoom

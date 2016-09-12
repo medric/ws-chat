@@ -14,7 +14,7 @@ export const chat = {
 
     this._wss = wss;
 
-    wss.on('connection', ws => {
+    this._wss.on('connection', ws => {
       console.log('new connection');
       parseCookie(ws.upgradeReq, null, (error) => {
         var sessionId = ws.upgradeReq.signedCookies['connect.sid'];
@@ -29,7 +29,7 @@ export const chat = {
       });
     });
 
-    function listen(user) {
+    const listen = user => {
       this.clients[user.id].ws.on('message', (msg) => {
         try {
           var data = JSON.parse(msg);
@@ -44,16 +44,16 @@ export const chat = {
     this.clients[userId].roomId = roomId;
   },
   _broadcast: function(data) {
-    this.clients.forEach(function each(client) {
-      client.ws.send(data);
-    });
+    for (var k in this.clients) {
+      this.clients[k].ws.send(data);
+    }
   },
   _broadcastToRoom: function(message) {
-    this.clients.forEach(client => {
-      if(client.roomId === message.roomId) {
-        client.ws.send(message);
+    for (var k in this.clients) {
+      if(this.clients[k].roomId === message.roomId) {
+        this.clients[k].ws.send(message);
       }
-    });
+    }
   },
   _handleData: function(user, data) {
     // todo: data validation
@@ -68,37 +68,33 @@ export const chat = {
             var res = Object.assign({}, data, {id: id});
             this._wss.broadcast(JSON.stringify(res));
           });
-
           break;
         case 'ADD_ROOM':
           // save to redis
           var key = `rooms:${data.name}`;
           redisClient.hmset(key, 'name', data.name, (error, reply) => {
             var res = Object.assign({}, data);
-            this._wss.broadcast(JSON.stringify(res));
+            this._join(user.id, data.name);
+            this._broadcast(JSON.stringify(res));
           });
-
           break;
         case 'NEW_MESSAGE':
           var id = guid();
 
           const indexKey = `messages:${data.roomId}`;
           // atomic operation
-          console.log('new');
           redisClient.multi()
           .incr('message:count')
-          .exec(function (err, replies) {
+          .exec((err, replies) => {
             var key = `message:${replies[0]}`;
             redisClient.multi()
             .hmset(key, 'roomId', data.roomId, 'author', data.roomId,
             'text', data.text, 'date', data.date)
             .sadd(indexKey, id)
-            .exec(function (err, replies) {
-              console.log(replies);
-              this._broadcastToRoom(data);
+            .exec((err, replies) => {
+              this._broadcastToRoom(JSON.stringify(data));
             });
           });
-
           break;
         default:
       }

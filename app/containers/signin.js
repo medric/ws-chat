@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import SigninForm from '../components/signinForm';
+import SigninForm from '../components/SigninForm';
 import { signin } from '../actions/common';
 
 const mapDispatchToProps = (dispatch) => {

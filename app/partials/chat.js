@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import Rooms from '../containers/rooms';
 import ThreadMessages from '../containers/threadMessages';
 import { ADD_ROOM, loadRoom } from '../actions/common';
+import { config } from '../../common/config';
+//import ws from '../utils/socket';
 
 class Chat extends Component {
   constructor(props) {
@@ -10,26 +12,26 @@ class Chat extends Component {
   }
 
   componentWillMount() {
-    window.socket = window.socket || this._initSocket();
-  }
-
-  _initSocket() {
-    const ws = new WebSocket('ws://localhost:3000/ws');
-
-    ws.onopen = () => {
-      console.log('Socket connection opened');
-    };
-
-    ws.onmessage = (msg) => {
-      try {
-        var data = JSON.parse(msg.data);
-        console.log(data);
-        this._handleData(data);
-      } catch (e) {
-      }
+      window.socket = window.socket || this._initSocket();
     }
 
-    return ws;
+    _initSocket() {
+      const ws = new WebSocket('ws://localhost:3000/ws');
+
+      ws.onopen = () => {
+        console.log('Socket connection opened');
+      };
+
+      ws.onmessage = (msg) => {
+        try {
+          var data = JSON.parse(msg.data);
+          console.log(data);
+          this._handleData(data);
+        } catch (e) {
+        }
+      }
+
+      return ws;
   }
 
   _handleData(data) {
