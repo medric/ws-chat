@@ -18,7 +18,7 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={hashHistory} >
       <Route path='/' component={Signin} />
-      <Route path="chat" component={Chat} />
+      <Route path='chat' component={Chat} />
     </Router>
   </Provider>,
   document.getElementById('app')

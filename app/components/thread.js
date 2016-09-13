@@ -6,8 +6,9 @@ class Thread extends Component {
 	   super(props);
 	}
 
+	// local state
 	state = {
-		currentMessage: ''
+		messageInput: ''
 	}
 
 	componentWillMount() {
@@ -17,28 +18,30 @@ class Thread extends Component {
 	}
 
   componentWillUpdate () {
+		console.log(this.props);
   }
 
   render() {
       return (
-          <div className="page__container-content row">
-              {
-                  this.props.messages.map(message => {
-                    return <Message key={message.id}
-                      {...message}
-                    />
-                  }, this)
-              }
-
+          <div className="page__container-content column">
+							<div id="messages-thread">
+								{
+	                  this.props.messages.map(message => {
+	                    return <Message key={message.id}
+	                      {...message}
+	                    />
+	                  }, this)
+	              }
+							</div>
 							<div>
-									<textarea value={ this.state.currentMessage }
-										onChange={(event) => {
-											this.setState({currentMessage: event.target.value});
+									<textarea value={ this.state.messageInput }
+										onChange={ (event) => {
+											this.setState({messageInput: event.target.value});
 										}}
 									>  </textarea>
 									<button
-									onClick={() => {
-										this.props.sendMessage(event, this.state.currentMessage, this.props.currentRoom);
+									onClick={ (event) => {
+										this.props.sendMessage(event, this.state.messageInput, this.props.currentRoom);
 									}}>
 										Send
 									</button>

@@ -80,7 +80,7 @@ app.get('/', function(req, res, next) {
     state: {
       rooms: [],
       messages: [],
-      signedIn: false
+      signedIn: req.session.user ? true : false
     }
   });
 });

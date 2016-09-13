@@ -1,14 +1,3 @@
-const actions = {
-  fecthRoom: {
-  },
-  addRoom: {
-    parameters: ['name']
-  },
-  login: {
-    parameters: ['name']
-  }
-};
-
 const config = {};
 
 config.twitter = {};
@@ -22,4 +11,4 @@ config.redis.port = 6379;
 config.host = 'localhost';
 config.port = 3000;
 
-export {actions, config};
+export {config};

@@ -16,7 +16,8 @@ class SigninForm extends Component {
 	}
 
 	componentWillMount() {
-		console.log(this.props.signedIn);
+		console.log('is signed in', this.props.signedIn);
+		this._redirect();
 	}
 
 	componentWillUnmount() {
@@ -27,12 +28,12 @@ class SigninForm extends Component {
 		console.log(router);
 	}
 
-  componentWillUpdate() {
-		console.log(this.props.signedIn);
+	componentWillReceiveProps(newProps) {
+		this._redirect(newProps);
 	}
 
-	componentWillReceiveProps(newProps) {
-		if(newProps.signedIn === true) {
+	_redirect(props = this.props) {
+		if(props.signedIn === true) {
 			this.context.router.push('/chat');
 		}
 	}

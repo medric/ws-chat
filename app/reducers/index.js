@@ -1,4 +1,11 @@
-import { ADD_ROOM, LOAD_ROOM, FETCH_ROOMS, SEND_MESSAGE, SIGN_IN} from '../actions/common';
+import {
+  ADD_ROOM,
+  LOAD_ROOM,
+  FETCH_ROOMS,
+  SEND_MESSAGE,
+  SIGN_IN,
+  LOAD_MESSAGE
+} from '../../common/utils';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -11,7 +18,13 @@ const reducer = (state, action) => {
       var newState = {...state, ...rooms };
 
       return newState;
-    case SEND_MESSAGE:
+    case LOAD_MESSAGE:
+      delete action.type;
+
+      var messages = { messages : [...state.messages, action] };
+      var newState = {...state, ...messages };
+      
+      return newState;
     case SIGN_IN:
       var newState = Object.assign({}, state, {
         signedIn: true

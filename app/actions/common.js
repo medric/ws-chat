@@ -1,11 +1,14 @@
 /*
 * action types
 */
-export const ADD_ROOM = 'ADD_ROOM';
-export const LOAD_ROOM = 'LOAD_ROOM';
-export const FETCH_ROOMS = 'FETCH_ROOMS';
-export const SEND_MESSAGE = 'SEND_MESSAGE';
-export const SIGN_IN = 'SIGN_IN';
+import {
+  ADD_ROOM,
+  LOAD_ROOM,
+  FETCH_ROOMS,
+  SEND_MESSAGE,
+  SIGN_IN,
+  LOAD_MESSAGE
+} from '../../common/utils';
 
 /*
 * action creators
@@ -48,11 +51,10 @@ export function addRoom(name) {
   }
 }
 
-export function sendMessage(user, text, roomId) {
+export function sendMessage(text, roomId) {
   if(window.socket) {
     let msg = {
-      type: 'NEW_MESSAGE',
-      user: user,
+      type: SEND_MESSAGE,
       text: text,
       roomId: roomId,
       date: new Date(),
@@ -63,7 +65,12 @@ export function sendMessage(user, text, roomId) {
 }
 
 export function loadRoom(room) {
-  let action = Object.assign({}, room, {type: LOAD_ROOM})
+  let action = Object.assign({}, room, {type: LOAD_ROOM});
+  return action;
+}
+
+export function loadMessage(message) {
+  let action = Object.assign({}, message, {type: LOAD_MESSAGE});
   return action;
 }
 

@@ -9,12 +9,12 @@ const mapDispatchToProps = (dispatch, ...args) => {
   return {
     sendMessage: (event, text, roomId) => {
   		event.preventDefault();
-      dispatch(sendMessage(null, text, roomId));
+      dispatch(sendMessage(text, roomId));
   	}
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     messages: state.messages,
     currentRoom: state.currentRoom

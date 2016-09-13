@@ -13,8 +13,7 @@ module.exports = (req, res) => {
       id: shortid.generate(),
       name: req.body.username,
     };
-
-    //req.session.save();
+    
     res.send(options);
   }
 }
