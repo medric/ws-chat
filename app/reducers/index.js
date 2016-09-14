@@ -7,33 +7,35 @@ import {
   LOAD_MESSAGE
 } from '../../common/utils';
 
-const reducer = (state, action) => {
+const reducer = (state = {}, action) => {
   switch (action.type) {
     case FETCH_ROOMS:
       break;
     case LOAD_ROOM:
       delete action.type;
 
-      var rooms = { rooms : [...state.rooms, action], currentRoom : action.name };
-      var newState = {...state, ...rooms };
+      let rooms = { rooms : [...state.rooms, action], currentRoom : action.name };
+      state = {...state, ...rooms };
 
-      return newState;
+      break;
     case LOAD_MESSAGE:
       delete action.type;
 
-      var messages = { messages : [...state.messages, action] };
-      var newState = {...state, ...messages };
-      
-      return newState;
+      let messages = { messages : [...state.messages, action] };
+      state = {...state, ...messages };
+
+      break;
     case SIGN_IN:
-      var newState = Object.assign({}, state, {
+      state = Object.assign({}, state, {
         signedIn: true
       });
 
-      return newState;
+      break;
     default:
       return state;
   }
+
+  return state;
 };
 
 export default reducer;

@@ -10,17 +10,7 @@ class Thread extends Component {
 	state = {
 		messageInput: ''
 	}
-
-	componentWillMount() {
-	}
-
-	componentWillUnmount() {
-	}
-
-  componentWillUpdate () {
-		console.log(this.props);
-  }
-
+	
   render() {
       return (
           <div className="page__container-content column">
@@ -49,7 +39,6 @@ class Thread extends Component {
           </div>
       );
   }
-
 }
 
 Thread.propTypes = {
