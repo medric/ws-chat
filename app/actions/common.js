@@ -48,6 +48,9 @@ export function addRoom(name) {
     };
 
     send(JSON.stringify(msg));
+    return msg;
+  } else {
+    // type err
   }
 }
 
@@ -61,6 +64,7 @@ export function sendMessage(text, roomId) {
     };
 
     send(JSON.stringify(msg));
+    return msg;
   }
 }
 

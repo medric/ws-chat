@@ -12,18 +12,14 @@ const reducer = (state = {}, action) => {
     case FETCH_ROOMS:
       break;
     case LOAD_ROOM:
-      delete action.type;
-
       let rooms = { rooms : [...state.rooms, action], currentRoom : action.name };
       state = {...state, ...rooms };
 
       break;
     case LOAD_MESSAGE:
-      delete action.type;
-
       let messages = { messages : [...state.messages, action] };
       state = {...state, ...messages };
-
+      
       break;
     case SIGN_IN:
       state = Object.assign({}, state, {

@@ -21,10 +21,10 @@ class Chat extends Component {
   }
 
   componentWillMount() {
-    window.socket = window.socket || this._initSocket();
+    window.socket = window.socket || this.initSocket();
   }
 
-  _initSocket() {
+  initSocket() {
     const ws = new WebSocket(`ws://${config.host}:${config.port}/ws`);
 
     ws.onopen = () => {
@@ -34,7 +34,7 @@ class Chat extends Component {
     ws.onmessage = (msg) => {
       try {
         var data = JSON.parse(msg.data);
-        this._handleData(data);
+        this.handleData(data);
       } catch (e) {
       }
     }
@@ -42,7 +42,7 @@ class Chat extends Component {
     return ws;
   }
 
-  _handleData(data) {
+  handleData(data) {
     // todo: data validation
     if(data.hasOwnProperty('type')) {
       switch (data.type) {
