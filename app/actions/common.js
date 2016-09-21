@@ -7,7 +7,8 @@ import {
   FETCH_ROOMS,
   SEND_MESSAGE,
   SIGN_IN,
-  LOAD_MESSAGE
+  LOAD_MESSAGE,
+  SOCKET_ERROR
 } from '../../common/utils';
 
 /*
@@ -50,7 +51,9 @@ export function addRoom(name) {
     send(JSON.stringify(msg));
     return msg;
   } else {
-    // type err
+    return {
+      type: SOCKET_ERROR,
+    }
   }
 }
 
@@ -80,6 +83,7 @@ export function loadMessage(message) {
 
 function fetchRooms() {
   return {
+    
   }
 }
 

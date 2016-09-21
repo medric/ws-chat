@@ -9,3 +9,4 @@ export const FETCH_ROOMS = 'FETCH_ROOMS';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const LOAD_MESSAGE = 'LOAD_MESSAGE';
 export const SIGN_IN = 'SIGN_IN';
+export const SOCKET_ERROR = 'SOCKET_ERROR';
