@@ -17,22 +17,26 @@ class Thread extends Component {
 
 	render() {
 		return (
-			<div className="page__container-content column">
-				<div id="messages-thread">
+			<div id="message-input" className="page__container-content column">
+				<div className="column" id="messages-thread">
 					{this.props.messages}
 				</div>
-				<div>
-					<textarea value={this.state.messageInput}
-						onChange={ (event) => {
-							this.setState({messageInput: event.target.value});
-						}}
-						>  </textarea>
-						<button
-							onClick={ (event) => {
-								this.props.sendMessage(event, this.state.messageInput, this.props.currentRoom);
-							}}>
-							Send
-						</button>
+				<div className="page__container-content__wrapper">
+					<form className="row page__container-content__wrapper-form">
+						<textarea
+							className="flg-10"
+							value={this.state.messageInput}
+							onChange={ (event) => {
+								this.setState({messageInput: event.target.value});
+							}}
+							>  </textarea>
+							<button
+								onClick={ (event) => {
+									this.props.sendMessage(event, this.state.messageInput, this.props.currentRoom);
+								}}>
+								Send
+							</button>
+						</form>
 				</div>
 			</div>
 		);

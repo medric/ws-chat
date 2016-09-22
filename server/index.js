@@ -82,12 +82,11 @@ app.get('*', (req, res, next) => {
       );
 
       fetchData();
-      
+
       // Waiting for data to be fetched before rendering
       async function fetchData() {
-        console.log('ff');
         let channels = await getChannels();
-        console.log(channels);
+
         const data = {
           title: 'ChatX',
           content: component,

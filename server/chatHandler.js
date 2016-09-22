@@ -123,11 +123,23 @@ export const chatHandler = {
 
 export function getChannels() {
   const indexKey = 'rooms';
-  const multi = redisClient.multi();
 
   return new Promise((resolve, reject) => {
-    multi.smembers(indexKey, '0', 'match', 'rooms:*', (err, replies) => {
-      replies.forEach();
+    redisClient.smembers(indexKey, (err, replies) => {
+      let values = [];
+      let i = 0;
+
+      (function next(i) {
+        if (i < replies.length) {
+          let key = replies[i];
+          redisClient.hgetall(key, function (err, obj) {
+            values.push(obj);
+            next(++i);
+          });
+        } else {
+          resolve(values);
+        }
+      })(i);
     });
   });
 }

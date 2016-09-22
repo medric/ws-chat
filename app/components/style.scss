@@ -11,6 +11,7 @@ $theme-color: #4DD0E1;
 $card-color: #EEE;
 $font-color: #333;
 
+$scale: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;
 @include global-reset;
 
 // Functions
@@ -25,20 +26,25 @@ $font-color: #333;
   font-size: get-rem($size);
 }
 
+@mixin flexbox-grow($rate) {
+  flex-grow: $rate / 10;
+}
+
 @mixin button($width) {
   width: $width;
   height: 35px;
   border: none;
   background: #4DD0E1;
   border-bottom: solid 2px #3cb8c7;
-  margin: 5px;
   color: #FFF;
   border-radius: 2px;
+  font-family: inherit;
+  font-weight: 800;
 }
 
 .page__container {
   @include establish-baseline($base-font-size);
-  font-family: sans-serif;
+  font-family: Lato, Sans-Serif;
 
   .page__container-view {
     background: #f1f1f1;
@@ -67,12 +73,32 @@ $font-color: #333;
   }
 
   input, textarea {
-    border: none;
-    border-bottom: solid 1px #cecece;
+    border: solid 1px #cecece;
+    height: 35px;
+
+    -moz-transition: all 0.20s ease-in-out;
+    -webkit-transition: all 0.20s ease-in-out;
+    -ms-transition: all 0.20s ease-in-out;
+    -o-transition: all 0.20s ease-in-out;
+    outline: none;
+
+    padding: 3px 0px 3px 3px;
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  textarea:focus, input:focus{
+    outline: none;
+    border-color: $theme-color;
+    box-shadow: 0 0 5px $theme-color;
   }
 
   button {
     @include button(200px);
+
+    margin-left: 5px;
 
     a {
       text-decoration: none;
@@ -97,36 +123,62 @@ $font-color: #333;
     @include flex-wrap(wrap);
   }
 
+  @each $i in $scale {
+    .flg-#{$i}{
+      @include flexbox-grow($i);
+    }
+  }
+
   .input-x {
-    width: 350px;
     height: 35px;
+    flex: 2;
   }
 
   #signin-container {
     position: fixed;
     top: 50%;
-    /* margin: auto; */
     width: 600px;
     left: 50%;
     margin-left: -15em;
     margin-top: -9em;
   }
 
-  textarea:focus, input:focus{
-    outline: none;
-  }
-
   ul#room-list {
     padding: 10px;
+    max-height: 500px;
+    height: 500px;
+    overflow: auto;
+
     li {
       padding: 15px;
-      width: 200px;
       background: #e8e8e8;
-      border-bottom: solid 1px #d4d4d4;
+      border-bottom: solid 1px #e0e0e0;
+
+      &:hover {
+        cursor: pointer;
+        background: $theme-color;
+      }
     }
   }
 
   .page__container-content__form {
     padding: 10px;
+    width: 320px;
+  }
+
+  .page__container-content__wrapper-form {
+    width: 50%;
+    margin: auto;
+  }
+
+  #messages-thread {
+    width: 50%;
+    margin: auto;
+  }
+
+  #message-input {
+    bottom: 100px;
+    position: fixed;
+    width: 100%;
   }
 }
