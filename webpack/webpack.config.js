@@ -39,6 +39,10 @@ module.exports = {
         exclude: [path.join(__dirname, '../node_modules/'),
                   path.join(__dirname, '../dist/'),
                   path.join(__dirname, '../server/') ] // except for the node_modules, dist and server folders.
+      },
+      {
+        test: /\.(jpg|png|gif|svg)$/,
+        loader: 'file'
       }
     ]
   },

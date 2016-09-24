@@ -1,5 +1,7 @@
 import {
   ADD_ROOM,
+  JOIN_ROOM,
+  REACH_ROOM,
   LOAD_ROOM,
   FETCH_ROOMS,
   SEND_MESSAGE,
@@ -10,16 +12,25 @@ import {
 const reducer = (state = {}, action) => {
   switch (action.type) {
     case FETCH_ROOMS:
-      break;
+      break
     case LOAD_ROOM:
-      let rooms = { rooms : [...state.rooms, action], currentRoom : action.name };
+      var rooms = { rooms : [...state.rooms, action], currentRoom : action.room };
       state = {...state, ...rooms };
 
       break;
-    case LOAD_MESSAGE:
-      let messages = { messages : [...state.messages, action] };
-      state = {...state, ...messages };
+    case REACH_ROOM:
+      state = Object.assign({}, state, {
+        currentRoom: action.room,
+        messages: action.messages
+      });
+
+      console.log(action, state);
       
+      break;
+    case LOAD_MESSAGE:
+      var messages = { messages : [...state.messages, action] };
+      state = {...state, ...messages };
+
       break;
     case SIGN_IN:
       state = Object.assign({}, state, {

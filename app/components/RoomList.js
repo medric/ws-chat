@@ -9,18 +9,6 @@ class RoomList extends Component {
 		room: ''
 	};
 
-	componentWillMount() {
-	}
-
-	componentDidMount() {
-	}
-
-	componentWillUnmount() {
-	}
-
-  componentWillUpdate () {
-  }
-
   render() {
       return (
 					<div className="row">
@@ -28,7 +16,10 @@ class RoomList extends Component {
 	              <ul id="room-list">
 	              {
 	                  this.props.rooms.map(room => {
-	                    return <li key={ room.name }> { room.name } </li>
+											let isActive = (room.name === this.props.currentRoom) ? true : false;
+	                    return <li id={ isActive ? 'current-room' : null } onClick={() => {
+												this.props.joinRoom(event, room.name);
+											}} key={ room.name }> { room.name } </li>
 	                  }, this)
 	              }
 	              </ul>
@@ -52,11 +43,14 @@ class RoomList extends Component {
 }
 
 RoomList.propTypes = {
+	currentRoom: PropTypes.string,
 	rooms: PropTypes.array,
 	addRoom: PropTypes.func,
+	joinRoom: PropTypes.func
 };
 
 RoomList.defaultProps = {
+	currentRoom: '',
   rooms: [],
 };
 

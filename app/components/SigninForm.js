@@ -38,9 +38,9 @@ class SigninForm extends Component {
 
   render() {
       return (
-          <div id="signin-container" className="page__container-content row">
-							<div className="">
-									<input className="input-x" type="text" value={ this.state.username }
+					<div id="signin-wrapper">
+						<div id="signin-container" className="page__container-content row">
+									<input type="text" placeholder="Pick a username" value={ this.state.username }
 										onChange={(event) => {
 											this.setState({username: event.target.value});
 										}}
@@ -51,8 +51,8 @@ class SigninForm extends Component {
 									}}>
 										Send
 									</button>
-							</div>
-          </div>
+	          </div>
+					</div>
       );
   }
 

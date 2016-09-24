@@ -43,7 +43,7 @@ app.use(session({
 
 app.set('view engine', 'jade');
 
-// use in dev only
+// Use in dev only
 app.use(webpackDevMiddleware(compiler, {
   noInfo: true, publicPath: webpackConfig.output.publicPath
 }));
@@ -52,6 +52,7 @@ app.use(webpackHotMiddleware(compiler));
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../dist')));
+app.use(express.static(path.join(__dirname, '../app/assets')));
 
 const server = app.listen(port, () => {
   let port = server.address().port;
@@ -85,7 +86,7 @@ app.get('*', (req, res, next) => {
 
       // Waiting for data to be fetched before rendering
       async function fetchData() {
-        let channels = await getChannels();
+        const channels = await getChannels();
 
         const data = {
           title: 'ChatX',

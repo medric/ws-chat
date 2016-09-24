@@ -30,7 +30,7 @@ class Thread extends Component {
 								this.setState({messageInput: event.target.value});
 							}}
 							>  </textarea>
-							<button
+							<button className="flg-1"
 								onClick={ (event) => {
 									this.props.sendMessage(event, this.state.messageInput, this.props.currentRoom);
 								}}>

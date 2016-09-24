@@ -4,11 +4,12 @@ import Rooms from '../containers/rooms';
 import ThreadMessages from '../containers/threadMessages';
 import { config } from '../../common/config';
 
-import { loadRoom, loadMessage } from '../actions/common';
+import { loadRoom, loadMessage, reachRoom } from '../actions/common';
 
 import {
   ADD_ROOM,
   LOAD_ROOM,
+  JOIN_ROOM,
   FETCH_ROOMS,
   SEND_MESSAGE,
   LOAD_MESSAGE,
@@ -48,6 +49,9 @@ class Chat extends Component {
       switch (data.type) {
         case ADD_ROOM:
           this.props.dispatch(loadRoom(data));
+          break;
+        case JOIN_ROOM:
+          this.props.dispatch(reachRoom(data));
           break;
         case SEND_MESSAGE:
           this.props.dispatch(loadMessage(data));

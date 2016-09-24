@@ -2,6 +2,7 @@ import { redisClient, sessionStore, parseCookie } from './bootstrap';
 import {
   ADD_ROOM,
   LOAD_ROOM,
+  JOIN_ROOM,
   FETCH_ROOMS,
   SEND_MESSAGE,
   SIGN_IN,
@@ -57,6 +58,9 @@ export const chatHandler = {
     // User weakmap instead ?
     this.clients[userId].roomId = roomId;
   },
+  send: function(userId, data) {
+    this.clients[userId].ws.send(JSON.stringify(data));
+  },
   broadcast: function(data) {
     for (let k in this.clients) {
       this.clients[k].ws.send(JSON.stringify(data));
@@ -70,13 +74,24 @@ export const chatHandler = {
     }
   },
   handleData: function(user, data) {
-    // Todo: data validation
+    // TODO: data validation and error handling
     if(data.hasOwnProperty('type')) {
       switch (data.type) {
-        case 'JOIN':
-          this.join(user.id, data.roomId);
+        case JOIN_ROOM:
+          this.join(user.id, data.name);
+
+          (async () => {
+            const messages = await getMessages(data.name);
+            const res = Object.assign({}, {
+              type: data.type,
+              messages: messages,
+              room: data.name
+            });
+            this.send(user.id, res);
+          })();
+
           break;
-        case 'ADD_ROOM':
+        case ADD_ROOM:
           // Save to redis
           const key = `rooms:${data.name}`;
           const roomsIndexKey = 'rooms';
@@ -86,28 +101,29 @@ export const chatHandler = {
             .sadd(roomsIndexKey, key)
             .exec((err, replies) => {
               const res = Object.assign({}, data);
+
               this.join(user.id, data.name);
               this.broadcast(res);
             });
           break;
-        case 'SEND_MESSAGE':
+        case SEND_MESSAGE:
           const id = shortid.generate();
           const messagesIndexKey = `messages:${data.roomId}`;
 
-          // atomic operation
+          // Atomic operation
           redisClient.multi()
           .incr('message:count')
           .exec((err, replies) => {
-            var key = `message:${replies[0]}`;
+            let key = `message:${replies[0]}`;
             redisClient.multi()
             .hmset(key, 'id', id, 'roomId', data.roomId, 'author', data.roomId,
             'text', data.text, 'date', data.date)
-            .sadd(messagesIndexKey, id)
+            .sadd(messagesIndexKey, key)
             .exec((err, replies) => {
               if(err) {
 
               } else {
-                let res = Object.assign({id: id}, data);
+                const res = Object.assign({id: id}, data);
                 // broadcast new message to room
                 this.broadcastToRoom(res);
               }
@@ -126,6 +142,30 @@ export function getChannels() {
 
   return new Promise((resolve, reject) => {
     redisClient.smembers(indexKey, (err, replies) => {
+      let values = [];
+      let i = 0;
+
+      (function next(i) {
+        if (i < replies.length) {
+          let key = replies[i];
+          redisClient.hgetall(key, function (err, obj) {
+            values.push(obj);
+            next(++i);
+          });
+        } else {
+          resolve(values);
+        }
+      })(i);
+    });
+  });
+}
+
+export function getMessages(channelId) {
+  const indexKey = `messages:${channelId}`;
+
+  return new Promise((resolve, reject) => {
+    redisClient.smembers(indexKey, (err, replies) => {
+      console.log(replies);
       let values = [];
       let i = 0;
 

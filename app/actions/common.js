@@ -1,9 +1,11 @@
 /*
-* action types
+* Action types
 */
 import {
   ADD_ROOM,
+  JOIN_ROOM,
   LOAD_ROOM,
+  REACH_ROOM,
   FETCH_ROOMS,
   SEND_MESSAGE,
   SIGN_IN,
@@ -12,7 +14,7 @@ import {
 } from '../../common/utils';
 
 /*
-* action creators
+* Action creators
 */
 export function signin(username) {
   return dispatch => {
@@ -52,7 +54,23 @@ export function addRoom(name) {
     return msg;
   } else {
     return {
-      type: SOCKET_ERROR,
+      type: SOCKET_ERROR
+    }
+  }
+}
+
+export function joinRoom(name) {
+  if(window.socket) {
+    let msg = {
+      type: JOIN_ROOM,
+      name: name
+    };
+
+    send(JSON.stringify(msg));
+    return msg;
+  } else {
+    return {
+      type: SOCKET_ERROR
     }
   }
 }
@@ -72,19 +90,19 @@ export function sendMessage(text, roomId) {
 }
 
 export function loadRoom(room) {
+  console.log(room);
   let action = Object.assign({}, room, {type: LOAD_ROOM});
+  return action;
+}
+
+export function reachRoom(data) {
+  let action = Object.assign({}, data, {type: REACH_ROOM});
   return action;
 }
 
 export function loadMessage(message) {
   let action = Object.assign({}, message, {type: LOAD_MESSAGE});
   return action;
-}
-
-function fetchRooms() {
-  return {
-    
-  }
 }
 
 function send(data) {
