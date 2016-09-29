@@ -23,9 +23,7 @@ const reducer = (state = {}, action) => {
         currentRoom: action.room,
         messages: action.messages
       });
-
-      console.log(action, state);
-      
+          
       break;
     case LOAD_MESSAGE:
       var messages = { messages : [...state.messages, action] };

@@ -1,15 +1,25 @@
+import express from 'express';
+import graphqlHTTP from 'express-graphql';
+import React from 'react';
+
 import { chatHandler, getChannels } from './chatHandler';
-import App from '../app/partials/App';
 import { session, redisClient, RedisStore, sessionStore, parseCookie } from './bootstrap';
 import { config } from '../common/config';
+
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import reducer from '../app/reducers'
+import App from '../app/partials/App';
+
+// App graphql resources
+import schema from './data/schema';
+import resolvers from './data/resolvers';
 
 // SSR
 import { renderToString } from 'react-dom/server';
 import { match, RouterContext } from 'react-router';
 import routes from '../common/routes';
 
-const React = require('react');
-const express = require('express');
 const webpack = require('webpack');
 const webpackConfig = require('../webpack/webpack.config');
 const fs = require('fs');
@@ -54,6 +64,14 @@ app.use(webpackHotMiddleware(compiler));
 app.use(express.static(path.join(__dirname, '../dist')));
 app.use(express.static(path.join(__dirname, '../app/assets')));
 
+// Register graphql middleware
+app.use('/graphql', graphqlHTTP({
+  schema,
+  graphiql: true,
+  rootValue: resolvers,
+  pretty: process.env.NODE_ENV !== 'production',
+}));
+
 const server = app.listen(port, () => {
   let port = server.address().port;
 
@@ -72,6 +90,7 @@ const server = app.listen(port, () => {
 // SSR
 app.get('*', (req, res, next) => {
   match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
+    const store = createStore(reducer);
 
     if (error) {
       res.status(500).send(error.message)
@@ -79,8 +98,13 @@ app.get('*', (req, res, next) => {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
       const component = renderToString(
-        <RouterContext {...renderProps} />
+        <Provider store={store}>
+          <RouterContext {...renderProps} />
+        </Provider>
       );
+
+      // Grab the initial state from our Redux store
+      //const preloadedState = store.getState()
 
       fetchData();
 
