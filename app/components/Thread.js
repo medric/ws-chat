@@ -17,8 +17,8 @@ class Thread extends Component {
 
 	render() {
 		return (
-			<div id="message-input" className="page__container-content column">
-				<div className="column" id="messages-thread">
+			<div className="page__container-content column message-input">
+				<div className="messages-thread">
 					{this.props.messages}
 				</div>
 				<div className="page__container-content__wrapper">

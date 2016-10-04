@@ -38,19 +38,22 @@ class SigninForm extends Component {
 
   render() {
       return (
-					<div id="signin-wrapper">
-						<div id="signin-container" className="page__container-content row">
-									<input type="text" placeholder="Pick a username" value={ this.state.username }
-										onChange={(event) => {
-											this.setState({username: event.target.value});
-										}}
-									/>
-									<button
-									onClick={() => {
-										this.props.signin(event, this.state.username);
-									}}>
-										Send
-									</button>
+					<div className="signin-wrapper">
+						<div className="page__container-content signin-container">
+									<h2>ws</h2>
+									<div className="col">
+										<input type="text" placeholder="Username" value={ this.state.username }
+											onChange={(event) => {
+												this.setState({username: event.target.value});
+											}}
+										/>
+										<button
+										onClick={() => {
+											this.props.signin(event, this.state.username);
+										}}>
+											Sign in
+										</button>
+									</div>
 	          </div>
 					</div>
       );

@@ -124,7 +124,7 @@ export const chatHandler = {
 
               } else {
                 const res = Object.assign({id: id}, data);
-                // broadcast new message to room
+                // Broadcast new message to room
                 this.broadcastToRoom(res);
               }
             });
@@ -165,7 +165,6 @@ export function getMessages(channelId) {
 
   return new Promise((resolve, reject) => {
     redisClient.smembers(indexKey, (err, replies) => {
-      console.log(replies);
       let values = [];
       let i = 0;
 

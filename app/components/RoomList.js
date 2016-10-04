@@ -12,30 +12,33 @@ class RoomList extends Component {
   render() {
       return (
 					<div className="row">
-						<div className="page__container-content col">
-	              <ul id="room-list">
-	              {
-	                  this.props.rooms.map(room => {
-											let isActive = (room.name === this.props.currentRoom) ? true : false;
-	                    return <li id={ isActive ? 'current-room' : null } onClick={() => {
-												this.props.joinRoom(event, room.name);
-											}} key={ room.name }> { room.name } </li>
-	                  }, this)
-	              }
-	              </ul>
-	              <div className="page__container-content__form row">
-	                  <input type="text" value={ this.state.room } className="input-x"
-											onChange={(event) => {
-												this.setState({room: event.target.value});
-											}}
-										/>
-	                  <button className="flg-10"
-											onClick={() => {
-												this.props.addRoom(event, this.state.room)
-											}}>
-											Add
-	                  </button>
-	              </div>
+						<div className="page__container-content">
+								<div className="page__container-content__rooms col">
+									<span>Channels</span>
+		              <ul className="room-list">
+		              {
+		                  this.props.rooms.map(room => {
+												let isActive = (room.name === this.props.currentRoom) ? true : false;
+		                    return <li id={ isActive ? 'current-room' : null } onClick={() => {
+													this.props.joinRoom(event, room.name);
+												}} key={ room.name }> { room.name } </li>
+		                  }, this)
+		              }
+		              </ul>
+		              <div className="page__container-content__form row">
+		                  <input type="text" value={ this.state.room } className="input-x"
+												onChange={(event) => {
+													this.setState({room: event.target.value});
+												}}
+											/>
+		                  <button className="flg-10"
+												onClick={() => {
+													this.props.addRoom(event, this.state.room)
+												}}>
+												Add
+		                  </button>
+		              </div>
+								</div>
 	          </div>
 					</div>
       );

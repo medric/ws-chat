@@ -11,6 +11,11 @@ $theme-color: #4DD0E1;
 $card-color: #EEE;
 $font-color: #333;
 
+$gutter: 10px;
+$base-padding: 10px;
+
+$base-font-size: 12px;
+
 $scale: 10;
 @include global-reset;
 
@@ -32,7 +37,7 @@ $scale: 10;
 
 @mixin button($width) {
   //width: $width;
-  height: 35px;
+  height: 40px;
   border: none;
   background: #4DD0E1;
   border-bottom: solid 2px #3cb8c7;
@@ -40,15 +45,58 @@ $scale: 10;
   border-radius: 2px;
   font-family: inherit;
   font-weight: 800;
+
+  outline: none;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+}
+
+@mixin reset-placeholder($color) {
+  ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: $color;
+  }
+  ::-moz-placeholder { /* Firefox 19+ */
+    color: $color;
+  }
+  :-ms-input-placeholder { /* IE 10+ */
+    color: $color;
+  }
+  :-moz-placeholder { /* Firefox 18- */
+    color: $color;
+  }
+}
+
+body {
+  font-family: Lato, Sans-Serif;
+  //@include font-size(12px);
 }
 
 .page__container {
   @include establish-baseline($base-font-size);
-  font-family: Lato, Sans-Serif;
+
+  .row {
+    @include display-flex;
+    @include flex-direction(row);
+    @include flex-wrap(wrap);
+  }
+
+  .col {
+    @include display-flex;
+    @include flex-direction(column);
+    @include flex-wrap(wrap);
+  }
+
+  @for $i from 1 through $scale {
+    .flg-#{$i}{
+      @include flexbox-grow($i);
+    }
+  }
 
   .page__container-view {
     background: #f1f1f1;
-    height: 100%;
   }
 
   h1, h2, h3 {
@@ -56,13 +104,13 @@ $scale: 10;
   }
 
   h1 {
-    @include font-size(20px);
+    @include font-size(30px);
     font-weight: 800;
     margin-bottom: 1rem;
   }
 
   h2 {
-    @include font-size(18px);
+    @include font-size(20px);
     font-weight: 600;
     margin-bottom: 1rem;
   }
@@ -76,13 +124,7 @@ $scale: 10;
     border: solid 1px #cecece;
     height: 35px;
     margin-right: 10px;
-
-    -moz-transition: all 0.20s ease-in-out;
-    -webkit-transition: all 0.20s ease-in-out;
-    -ms-transition: all 0.20s ease-in-out;
-    -o-transition: all 0.20s ease-in-out;
     outline: none;
-
     padding: 3px 0px 3px 3px;
   }
 
@@ -103,8 +145,6 @@ $scale: 10;
   button {
     @include button(200px);
 
-    //margin-left: 5px;
-
     a {
       text-decoration: none;
       color: #FFF;
@@ -116,106 +156,81 @@ $scale: 10;
     position: relative;
   }
 
-  .row {
-    @include display-flex;
-    @include flex-direction(row);
-    @include flex-wrap(wrap);
-  }
-
-  .col {
-    @include display-flex;
-    @include flex-direction(column);
-    @include flex-wrap(wrap);
-  }
-
-  @for $i from 1 through $scale {
-    .flg-#{$i}{
-      @include flexbox-grow($i);
-    }
+  .page__container-content.col {
+    height: 100%;
   }
 
   .input-x {
-    height: 35px;
+    height: 40px;
     flex: 2;
   }
 
-  #signin-wrapper {
-    height: 100%;
-
-    input {
-      background: none;
-      border: none;
-      border-bottom: solid 1px #fff;
-      color: #fff;
-      flex: 2;
-    }
-
-    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-      color: #FFF;
-    }
-    ::-moz-placeholder { /* Firefox 19+ */
-      color: #FFF;
-    }
-    :-ms-input-placeholder { /* IE 10+ */
-      color: #FFF;
-    }
-    :-moz-placeholder { /* Firefox 18- */
-      color: #FFF;
-    }
-  }
-
-  #signin-wrapper::after {
-    content: "";
+  .signin-wrapper {
+    display: flex;
     background: url('../assets/images/signin-page-background.jpg');
     background-size: cover;
-    opacity: 0.5;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    position: absolute;
-    //z-index: -1;
-  }
-
-  #signin-container {
+    height: 100%;
     position: fixed;
-    top: 50%;
-    width: 600px;
-    left: 50%;
-    margin-left: -15em;
-    margin-top: -9em;
-    z-index: 1;
+    text-align: center;
 
-    input {
-      font-style: italic;
+    @include reset-placeholder(#FFF);
+
+    h2 {
+      color: #FFF;
+      text-transform: uppercase;
+      font-weight: 200;
     }
-  }
 
-  ul#room-list {
-    padding: 10px;
-    max-height: 500px;
-    height: 500px;
-    overflow: auto;
+    .signin-container {
+      padding: $base-padding;
+      background: #333;
+      width: 500px;
+      height: 300px;
+      margin: auto;
 
-    li {
-      padding: 15px;
-      background: #e8e8e8;
-      border-bottom: solid 1px #e0e0e0;
+      input {
+        flex: 1;
+        background: none;
+        border: none;
+        color: #FFF;
+        border-bottom:solid 1px #FFF;
+        padding-bottom: 10px;
+      }
 
-      &:hover {
-        cursor: pointer;
-        opacity: 0.6;
+      button {
+        margin-top: $gutter;
       }
     }
-
-    li#current-room {
-      font-weight: 900;
-    }
   }
 
-  .page__container-content__form {
+  .page__container-content__rooms {
+    width: 300px;
+    height: 100%;
     padding: 10px;
-    width: 320px;
+
+    .room-list {
+      flex: 1;
+      overflow: auto;
+
+      li {
+        padding: 15px;
+        background: #e8e8e8;
+        border-bottom: solid 1px #e0e0e0;
+
+        &:hover {
+          cursor: pointer;
+          opacity: 0.6;
+        }
+      }
+
+      li#current-room {
+        font-weight: 900;
+      }
+    }
   }
 
   .page__container-content__wrapper-form {
@@ -223,12 +238,12 @@ $scale: 10;
     margin: auto;
   }
 
-  #messages-thread {
+  .messages-thread {
     width: 50%;
     margin: auto;
   }
 
-  #message-input {
+  .message-input {
     bottom: 100px;
     position: fixed;
     width: 100%;
