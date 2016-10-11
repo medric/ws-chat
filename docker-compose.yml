@@ -1,0 +1,27 @@
+version: '2'
+services:
+    app:
+        build: .
+        volumes:
+            - .:/code
+        depends_on:
+            - redis
+
+    redis:
+        image: redis
+        volumes:
+            - redis-data:/var/lib/redis
+
+    nginx:
+        build:
+            context: .
+            dockerfile: Dockerfile-nginx
+        container_name: nginx
+        links:
+            - app
+        ports:
+            - "8082:80"
+
+volumes:
+    redis-data:
+        driver: local
